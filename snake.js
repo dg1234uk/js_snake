@@ -6,6 +6,12 @@ var EMPTY = 0;
 var SNAKE = 1;
 var FRUIT = 2;
 
+
+/**
+* Grid data structure.
+*
+* @type {object}
+*/
 var grid = {
   width : null,
   height: null,
@@ -56,20 +62,56 @@ var grid = {
   }
 }
 
+/**
+* The snake works as a queue (FIFO) of data
+* with all current positions in grid with snake
+* id
+*
+* @type {object}
+*/
 var snake = {
-  direction: null,
-  _queue: null,
+  direction: null,  // Snake direction, represented by a number
+  last: null,       // Object, pointer to the last element in the queue
+  _queue: null,     // Array<number>
 
+
+  /*
+  * Clears the queue (snake) and sets the start position and direction
+  *
+  * @param {number} d start direction
+  * @param {number} x start x-coordinate
+  * @param {number} y start y-coordinate
+  */
   init: function(snakeDirection, x, y) {
-
+    // Sets Snakes starting direction.
+    this.direction = snakeDirection;
+    
+    // Creates an empty queue (aka snake)
+    this._queue = [];
+    // Inserts first block of the snakes body
+    this.insert(x, y);
   },
 
+  /*
+  * Adds an element to the snake queue
+  *
+  * @param {number} x x-coordinate
+  * @param {number} y y-coordinate
+  */
   insert: function(x, y) {
-
+    // Add object to the begining of the snake queue
+    this._queue.unshift({x:x, y:y});
+    // Saves this newly added element to 'last'.
+    this.last = this._queue[0];
   },
 
+  /*
+  * Removes and returns the first element of the snake queue
+  *
+  * @return {Object} the first element
+  */
   remove: function() {
-
+    return this._queue.pop();
   }
 }
 
