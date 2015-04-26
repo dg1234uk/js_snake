@@ -15,6 +15,7 @@ var canvas;
 var ctx;
 var keystate;
 var frames;
+var score;
 // Key Codes
 var KEY_LEFT = 37;
 var KEY_UP = 38;
@@ -162,6 +163,8 @@ function main() {
   // Add the canvas element to the body of the document
   document.body.appendChild(canvas)
 
+  ctx.font = "12px Helvetica";
+
   frames = 0;
   
   // Capture keystate and save them to 'keystate'
@@ -183,6 +186,7 @@ function main() {
 * Inits game objects / resets
 */
 function init() {
+  score = 0;
   // Create an empty grid.
   grid.init(EMPTY, COLS, ROWS);
 
@@ -214,10 +218,10 @@ function update() {
   frames++;
 
   // Check keystate and change snake direction accordingly.
-  if (keystate[KEY_LEFT]) snake.direction = LEFT;
-  if (keystate[KEY_UP]) snake.direction = UP;
-  if (keystate[KEY_RIGHT]) snake.direction = RIGHT;
-  if (keystate[KEY_DOWN]) snake.direction = DOWN;
+  if (keystate[KEY_LEFT] && snake.direction !== RIGHT) snake.direction = LEFT;
+  if (keystate[KEY_UP] && snake.direction !== DOWN) snake.direction = UP;
+  if (keystate[KEY_RIGHT] && snake.direction !== LEFT) snake.direction = RIGHT;
+  if (keystate[KEY_DOWN] && snake.direction !== UP) snake.direction = DOWN;
 
   // Update game state every 5 frames.
   if (frames % 5 === 0) {
@@ -242,15 +246,25 @@ function update() {
     }
 
     // Check to see if Snake tries to go outside of world,
+    // Also check if the snake hits itself.
     // If so restart the game.
     if (0 > newX || newX > grid.width - 1 ||
-      0 > newY || newY > grid.height - 1) {
+      0 > newY || newY > grid.height - 1 ||
+      grid.getCellValue(newX, newY) === SNAKE) {
       return init();
     }
 
-    // Remove the tail of the snake as it will move on one position.
-    var tail = snake.remove();
-    grid.setCellValue(EMPTY, tail.x, tail.y);
+    // Check to see if new cell has a fruit in it
+    if (grid.getCellValue(newX, newY) === FRUIT) {
+      // If it does, increase the size of the snake and set new food.
+      var tail = {x: newX, y: newY};
+      score++;
+      setFood();
+    } else {
+      // Remove the tail of the snake as it will move on one position.
+      var tail = snake.remove();
+      grid.setCellValue(EMPTY, tail.x, tail.y);
+    }
 
     // Add the snake ID to the new updated position.
     grid.setCellValue(SNAKE, newX, newY);
@@ -285,6 +299,11 @@ function draw() {
       ctx.fillRect(i * tileWidth, j * tileHeight, tileWidth, tileHeight);
     }
   }
+
+  // Set colour for text
+  ctx.fillStyle = "#000";
+  // Add SCORE text to bottom left of canvas.
+  ctx.fillText("SCORE " + score, 10, canvas.height - 10);
 }
 
 // Start and run the game.
