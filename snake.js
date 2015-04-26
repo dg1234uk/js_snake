@@ -221,6 +221,13 @@ function update() {
         break;
     }
 
+    // Check to see if Snake tries to go outside of world,
+    // If so restart the game.
+    if (0 > newX || newX > grid.width - 1 ||
+      0 > newY || newY > grid.height - 1) {
+      return init();
+    }
+
     // Remove the tail of the snake as it will move on one position.
     var tail = snake.remove();
     grid.setCellValue(EMPTY, tail.x, tail.y);
