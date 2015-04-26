@@ -15,6 +15,11 @@ var canvas;
 var ctx;
 var keystate;
 var frames;
+// Key Codes
+var KEY_LEFT = 37;
+var KEY_UP = 38;
+var KEY_RIGHT = 39;
+var KEY_DOWN = 40;
 
 /**
 * Grid data structure.
@@ -158,8 +163,17 @@ function main() {
   document.body.appendChild(canvas)
 
   frames = 0;
-  keystate = {};
   
+  // Capture keystate and save them to 'keystate'
+  keystate = {};
+  document.addEventListener("keydown", function(event) {
+    keystate[event.keyCode] = true;
+  });
+  document.addEventListener("keyup", function(event) {
+    delete keystate[event.keyCode];
+  });
+
+
   // Initiate game objects then start the game loop.
   init();
   gameLoop();
@@ -198,6 +212,12 @@ function gameLoop() {
 function update() {
   // Add 1 to total number of frames.
   frames++;
+
+  // Check keystate and change snake direction accordingly.
+  if (keystate[KEY_LEFT]) snake.direction = LEFT;
+  if (keystate[KEY_UP]) snake.direction = UP;
+  if (keystate[KEY_RIGHT]) snake.direction = RIGHT;
+  if (keystate[KEY_DOWN]) snake.direction = DOWN;
 
   // Update game state every 5 frames.
   if (frames % 5 === 0) {
