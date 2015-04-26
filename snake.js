@@ -136,8 +136,24 @@ function setFood() {
   grid.setCellValue(FRUIT, randomPosition.x, randomPosition.y);
 }
 
-function main() {
+// Game objects
+var canvas;
+var ctx;
+var keystate;
+var frames;
 
+function main() {
+  canvas = document.createElement("canvas");
+  canvas.width = COLS * 20;
+  canvas.height = ROWS * 20;
+  ctx = canvas.getContext("2d");
+  document.appendChild(canvas);
+
+  frames = 0;
+  keystate = {};
+
+  init();
+  loop();
 }
 
 function init() {
