@@ -11,8 +11,26 @@ var grid = {
   height: null,
   _grid: null,
 
-  init: function(snakeDirection, coloumns, rows) {
+  /*
+  * Initiate and fill a columns x rows grid with defaultFillValue (e.g. EMPTY, SNAKE or FRUIT)
+  * @param {any}    defaultFillValue default value to fill grid cell with
+  * @param {number} columns number of columns
+  * @param {number} rows number of rows
+  */
+  init: function(defaultFillValue, columns, rows) {
+    this.width = columns;
+    this.height = rows;
 
+    // Creates an empty array 'grid', outer for loop pushs empty array to 'grid'
+    // this will be a coloumn. The inner for loop then adds the defaultFillValue
+    // to the column array thus creating a cell on that row.
+    this._grid = [];
+    for (var i = 0; i < columns; i++) {
+      this._grid.push([]);
+      for (var j = 0; j < rows; j++) {
+        this._grid[i].push(defaultFillValue);
+      }
+    }
   },
 
   set: function(val, x, y) {
