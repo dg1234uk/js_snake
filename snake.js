@@ -196,7 +196,39 @@ function gameLoop() {
 * Update game logic
 */
 function update() {
+  // Add 1 to total number of frames.
   frames++;
+
+  // Update game state every 5 frames.
+  if (frames % 5 === 0) {
+    // Get last element from the snake queue.
+    var newX = snake.last.x;
+    var newY = snake.last.y;
+
+    // Update the snakes position based on its direction.
+    switch (snake.direction) {
+      case LEFT:
+        newX--;
+        break;
+      case UP:
+        newY--;
+        break;
+      case RIGHT:
+        newX++;
+        break;
+      case DOWN:
+        newY++;
+        break;
+    }
+
+    // Remove the tail of the snake as it will move on one position.
+    var tail = snake.remove();
+    grid.setCellValue(EMPTY, tail.x, tail.y);
+
+    // Add the snake ID to the new updated position.
+    grid.setCellValue(SNAKE, newX, newY);
+    snake.insert(newX, newY);
+  }
 }
 
 /*
