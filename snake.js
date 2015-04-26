@@ -5,7 +5,16 @@ var ROWS = 26;
 var EMPTY = 0;
 var SNAKE = 1;
 var FRUIT = 2;
-
+// Directions
+var LEFT = 0;
+var UP = 1;
+var RIGHT = 2;
+var DOWN = 3;
+// Game objects
+var canvas;
+var ctx;
+var keystate;
+var frames;
 
 /**
 * Grid data structure.
@@ -124,8 +133,8 @@ function setFood() {
   // Find EMPTY locations in 'grid' and store them in 'empty'
   for (var i = 0; i < grid.width; i++) {
     for (var j = 0; j < grid.height; j++) {
-      if (grid.getCellValue(x, y) === EMPTY) {
-        empty.push({x:x, y:y});
+      if (grid.getCellValue(i, j) === EMPTY) {
+        empty.push({x:i, y:j});
       }
     }
   }
@@ -136,42 +145,90 @@ function setFood() {
   grid.setCellValue(FRUIT, randomPosition.x, randomPosition.y);
 }
 
-// Game objects
-var canvas;
-var ctx;
-var keystate;
-var frames;
-
+/*
+* Starts the game
+*/
 function main() {
+  // Create and initiate the canvas element
   canvas = document.createElement("canvas");
   canvas.width = COLS * 20;
   canvas.height = ROWS * 20;
   ctx = canvas.getContext("2d");
-  document.appendChild(canvas);
+  // Add the canvas element to the body of the document
+  document.body.appendChild(canvas)
 
   frames = 0;
   keystate = {};
-
+  
+  // Initiate game objects then start the game loop.
   init();
-  loop();
+  gameLoop();
 }
 
+/*
+* Inits game objects / resets
+*/
 function init() {
+  // Create an empty grid.
+  grid.init(EMPTY, COLS, ROWS);
 
+  // Set start position of the snake.
+  var startPosition = {x: Math.floor(COLS / 2), y: ROWS - 1};
+  // Create the snake with initial direction of up and its start position
+  snake.init(UP, startPosition.x, startPosition.y);
+  // Put the snake in the grid.
+  grid.setCellValue(SNAKE, startPosition.x, startPosition.y);
+  // Create some food.
+  setFood();
 }
 
-function loop() {
-
+/*
+* The game loop function, used for game updates and rendering.
+*/
+function gameLoop() {
+  update();
+  draw();
+  // gameLoop is callback function, canvas is the canvas to draw on.
+  window.requestAnimationFrame(gameLoop, canvas);
 }
 
+/*
+* Update game logic
+*/
 function update() {
-
+  frames++;
 }
 
+/*
+* Render the grid to the canvas.
+*/
 function draw() {
+  // Calculate tile width and height
+  var tileWidth = canvas.width / grid.width;
+  var tileHeight = canvas.width / grid.width;
 
+  // Iterate through the grid and draw all cells.
+  for (var i = 0; i < grid.width; i++) {
+    for (var j = 0; j < grid.height; j++) {
+      // Sets colour of cell based on element in it.
+      switch (grid.getCellValue(i, j)) {
+        case EMPTY:
+          ctx.fillStyle = "#fff";
+          break;
+        case SNAKE:
+          console.log("SNAKE", i, j);
+          ctx.fillStyle = "#0ff";
+          break;
+        case FRUIT:
+          ctx.fillStyle = "#f00";
+          break;
+      }
+      ctx.fillRect(i * tileWidth, j * tileHeight, tileWidth, tileHeight);
+    }
+  }
 }
 
+// Start and run the game.
 main();
 
 
