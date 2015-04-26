@@ -115,8 +115,25 @@ var snake = {
   }
 }
 
+/*
+* Set a food id at random free cell in the grid
+*/
 function setFood() {
+  // An array to store all EMPTY locations in 'grid'.
+  var empty = [];
+  // Find EMPTY locations in 'grid' and store them in 'empty'
+  for (var i = 0; i < grid.width; i++) {
+    for (var j = 0; j < grid.height; j++) {
+      if (grid.getCellValue(x, y) === EMPTY) {
+        empty.push({x:x, y:y});
+      }
+    }
+  }
 
+  // Create a random position
+  var randomPosition = empty[Math.floor(Math.random() * empty.length)];
+  // Set a fruit at that position.
+  grid.setCellValue(FRUIT, randomPosition.x, randomPosition.y);
 }
 
 function main() {
