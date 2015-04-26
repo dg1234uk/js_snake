@@ -33,12 +33,26 @@ var grid = {
     }
   },
 
-  set: function(val, x, y) {
-
+  /*
+  * Set the value of the grid cell at (x, y)
+  *
+  * @param {any}    value what to set
+  * @param {number} x the x-coordinate
+  * @param {number} y the y-coordinate
+  */
+  setCellValue: function(value, x, y) {
+    this._grid[x][y] = value;
   },
 
-  get: function(x, y) {
-
+  /*
+  * Get the value of the grid cell at (x, y)
+  *
+  * @param {number} x the x-coordinate
+  * @param {number} y the y-coordinate
+  * @return {any}   the value at the cell
+  */
+  getCellValue: function(x, y) {
+    return this._grid[x][y];
   }
 }
 
